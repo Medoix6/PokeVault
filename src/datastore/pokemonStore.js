@@ -302,7 +302,7 @@ export const usePokemonStore = defineStore('pokemon', {
           ...this.pokemonDetails[id],
           ...updates
         }
-        
+
         // Also update the basic list if it exists
         const listIndex = this.pokemonList.findIndex(p => p.id === id)
         if (listIndex !== -1) {
@@ -310,6 +310,13 @@ export const usePokemonStore = defineStore('pokemon', {
             ...this.pokemonList[listIndex],
             name: updates.customName || updates.name || this.pokemonList[listIndex].name
           }
+        }
+
+        // Persist changes to localStorage for pokemonList
+        try {
+          localStorage.setItem('pokemonList', JSON.stringify(this.pokemonList));
+        } catch (err) {
+          console.warn('Failed to save updated pokemonList to localStorage:', err);
         }
       }
     },
