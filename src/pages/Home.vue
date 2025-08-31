@@ -18,9 +18,7 @@
     </div>
 
     <div v-else class="pokemon-grid">
-        <div v-if="processEnv !== 'production'" class="debug-overlay">
-          <small>pokemonList: {{ pokemonStore.pokemonList.length }} | filtered: {{ filteredPokemon.length }} | loading: {{ loading }}</small>
-        </div>
+  <!-- Debug overlay removed -->
       <transition-group name="pokemon-list" tag="div" class="row g-4">
         <div v-for="(pokemon, index) in displayedPokemon" 
              :key="pokemon.id" 

@@ -22,7 +22,12 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
+  // eslint-disable-next-line no-unused-vars
+  scrollBehavior(to, from, savedPosition) {
+    // Always scroll to top
+    return { top: 0 }
+  }
 })
 
 // Navigation guard to ensure Pokemon data is loaded

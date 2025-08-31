@@ -72,7 +72,8 @@ const handleClick = () => {
 
 
 const viewDetails = () => {
-  emit('details', props.pokemon)
+  // Navigate to detail page using Vue Router
+  router.push(`/pokemon/${props.pokemon.id}`)
 }
 
 const getTypeIcon = (type) => {
