@@ -11,7 +11,7 @@ export const usePokemonStore = defineStore('pokemon', {
     error: null,
     searchQuery: '',
     initialized: false, // Track if the store has been initialized
-    lastUpdated: null, // Track when the data was last updated
+    lastUpdated: null, 
     cacheTimestamp: null // Track when the cache was last updated
   }),
 
@@ -162,7 +162,6 @@ export const usePokemonStore = defineStore('pokemon', {
         const evolutionResponse = await axios.get(speciesData.evolution_chain.url)
         const evolutionData = evolutionResponse.data
         
-        // Process evolution chain
         const evolutions = await this.processEvolutionChain(evolutionData.chain)
         
         // Fetch move details
@@ -224,7 +223,7 @@ export const usePokemonStore = defineStore('pokemon', {
           moves: movesWithDetails,
           description: englishEntry ? englishEntry.flavor_text.replace(/\f|\n|\r/g, ' ') : null,
           evolutionChain: evolutions,
-          // Add editable fields
+          // editable fields
           customName: data.name,
           customDescription: englishEntry ? englishEntry.flavor_text.replace(/\f|\n|\r/g, ' ') : null,
           customHeight: data.height,
@@ -237,7 +236,7 @@ export const usePokemonStore = defineStore('pokemon', {
       } catch (error) {
         console.error('Error fetching Pokemon details:', error)
         this.error = error.message
-        // Try to build a minimal detail object from the cached pokemonList if available
+
         const listEntry = this.pokemonList.find(p => Number(p.id) === Number(id))
         if (listEntry) {
           const fallback = {

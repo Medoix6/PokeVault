@@ -72,7 +72,6 @@ const handleClick = () => {
 
 
 const viewDetails = () => {
-  // Navigate to detail page using Vue Router
   router.push(`/pokemon/${props.pokemon.id}`)
 }
 

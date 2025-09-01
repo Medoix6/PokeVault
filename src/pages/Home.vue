@@ -18,7 +18,6 @@
     </div>
 
     <div v-else class="pokemon-grid">
-  <!-- Debug overlay removed -->
       <transition-group name="pokemon-list" tag="div" class="row g-4">
         <div v-for="(pokemon, index) in displayedPokemon" 
              :key="pokemon.id" 
@@ -67,31 +66,23 @@ export default {
 
     // Function to ensure Pokemon data is loaded and displayed
     const ensurePokemonData = async () => {
-      // ensurePokemonData runs on mount/activate; debug overlay shows store sizes in dev mode
       try {
-        // Check if we're coming back from a detail page with a refresh parameter
         const needsRefresh = route.query._refresh !== undefined
         
         if (!pokemonStore.initialized || pokemonStore.pokemonList.length === 0 || needsRefresh) {
-          // Force refresh data when coming back from detail page
           console.log('Refreshing Pokemon data')
           await fetchPokemon(needsRefresh ? true : false)
           setSearchQuery('') // Reset search query when returning
         } else {
-          // We have a stored list. If filteredPokemon is empty but pokemonList has items,
-          // it's likely a stray search filter or stale state — reset search and trigger a patch.
           if (pokemonStore.pokemonList.length > 0 && pokemonStore.filteredPokemon.length === 0) {
-            // Reset search query and bump lastUpdated to re-trigger reactivity in the view
             pokemonStore.$patch((state) => {
               state.searchQuery = ''
               state.lastUpdated = Date.now()
             })
           } else {
-            // Nothing to do, but update lastUpdated to keep store reactive
             pokemonStore.$patch((state) => { state.lastUpdated = Date.now() })
           }
         }
-        // Hard fallback: if displayedPokemon is still empty but pokemonList is not, force reload
         setTimeout(() => {
           if (
             typeof window !== 'undefined' &&
@@ -111,14 +102,14 @@ export default {
     // Load data when component is mounted
     onMounted(ensurePokemonData)
     
-    // Also load data when component is activated (when using keep-alive)
+    // Also ensure data is fresh when navigating back to this page
     onActivated(ensurePokemonData)
 
     const handleSearch = (query) => {
       setSearchQuery(query)
     }
 
-    // displayedPokemon: prefer filtered results but fall back to full list when filtered is empty
+    // Computed property to determine which list to display
     const displayedPokemon = computed(() => {
       const filtered = filteredPokemon.value || []
       if (Array.isArray(filtered) && filtered.length > 0) return filtered
@@ -133,7 +124,6 @@ export default {
 
     const handleDetails = (pokemon) => {
       console.log('View details for:', pokemon.name)
-      // Navigate to detail page
     }
 
     return {

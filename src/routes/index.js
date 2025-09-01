@@ -24,25 +24,21 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
   // eslint-disable-next-line no-unused-vars
-  scrollBehavior(to, from, savedPosition) {
-    // Always scroll to top
+  scrollBehavior(_to, _from, _savedPosition) {
     return { top: 0 }
   }
 })
 
-// Navigation guard to ensure Pokemon data is loaded
 router.beforeEach(async (to, from, next) => {
   const pokemonStore = usePokemonStore()
   
   if (to.name === 'Home') {
     try {
-      // Reset the search query
       pokemonStore.searchQuery = ''
       
       if (!pokemonStore.initialized || pokemonStore.pokemonList.length === 0) {
         await pokemonStore.fetchPokemon()
       } else {
-        // Just update the timestamp to trigger reactivity
         pokemonStore.$patch((state) => {
           state.lastUpdated = Date.now()
         })
