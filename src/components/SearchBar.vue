@@ -26,6 +26,7 @@
         <span>{{ suggestion }}</span>
       </div>
     </div>
+  <div v-if="showNotFound" class="not-found-message">Pokémon not found.</div>
   </div>
 </template>
 
@@ -41,6 +42,7 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue', 'search'])
 const isFocused = ref(false)
 const isSearching = ref(false)
+const showNotFound = ref(false)
 
 const suggestions = [
   'Pikachu', 'Charizard', 'Blastoise', 'Venusaur', 'Mewtwo', 'Mew',
@@ -85,11 +87,24 @@ const clearSearch = () => {
 }
 
 const selectSuggestion = (suggestion) => {
-  emit('update:modelValue', suggestion)
-  emitSearch()
-  isFocused.value = false
+  let current = props.modelValue.trim();
+  // Only append if not already present as a word
+  const words = current.split(/\s+/).filter(Boolean);
+  if (!words.includes(suggestion)) {
+    current = current ? `${current} ${suggestion}` : suggestion;
+  }
+  emit('update:modelValue', current);
+  emitSearch();
+  isFocused.value = false;
 }
 </script>
+const onSearch = () => {
+  const found = suggestions.some(suggestion =>
+    suggestion.toLowerCase() === props.modelValue.trim().toLowerCase()
+  );
+  showNotFound.value = !found && props.modelValue.trim() !== "";
+  emit('search', props.modelValue);
+}
 
 <style scoped>
 .search-container {
@@ -241,5 +256,9 @@ const selectSuggestion = (suggestion) => {
   .search-input {
     font-size: 1rem;
   }
+}
+.not-found-message {
+  color: red;
+  margin-left: 10px;
 }
 </style>

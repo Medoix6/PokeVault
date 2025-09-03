@@ -27,9 +27,15 @@ export const usePokemonStore = defineStore('pokemon', {
   
   getters: {
     filteredPokemon: (state) => {
-      return state.pokemonList.filter(pokemon => 
-        pokemon.name.toLowerCase().includes(state.searchQuery.toLowerCase())
-      )
+      const query = state.searchQuery.trim().toLowerCase();
+      if (!query) return state.pokemonList;
+      const queryParts = query.split(/\s+/).filter(Boolean);
+      return state.pokemonList.filter(pokemon => {
+        const nameMatch = pokemon.name.toLowerCase().includes(query);
+        const typeMatch = Array.isArray(pokemon.types) &&
+          queryParts.every(q => pokemon.types.some(type => type.toLowerCase().includes(q)));
+        return nameMatch || typeMatch;
+      });
     },
     
     getPokemonById: (state) => (id) => {

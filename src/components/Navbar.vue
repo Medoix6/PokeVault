@@ -11,12 +11,7 @@
         <span class="brand-text">PokeVault</span>
       </router-link>
       
-      <div class="nav-links">
-        <router-link to="/" class="nav-link" active-class="active">
-          <i class="fas fa-home"></i>
-          <span>Home</span>
-        </router-link>
-      </div>
+  <!-- Home button removed as requested -->
     </div>
   </nav>
 </template>
